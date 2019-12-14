@@ -1,25 +1,26 @@
 package com.example.album.ui.users
 
-import com.example.album.datamodel.AlbumData
-import com.example.album.datamodel.UserData
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
-class UsersListPresenter(private val view: UsersListViewPresenterContract.ViewInterface,
-                         private val model: UsersModel) :
+class UsersListPresenter(
+    private val view: UsersListViewPresenterContract.ViewInterface,
+    private val model: UsersModel
+) :
     UsersListViewPresenterContract.PresenterInterface {
     private val compositeDisposable = CompositeDisposable()
 
     override fun getUsersList() {
         compositeDisposable.add(model.getUsersFromProvider()
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { view.showProgress() }
-                .subscribe({
-                    view.hideProgress()
-                    view.displayUsersList(it);
-                }, {
-                    view.hideProgress()
-                }))
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { view.showProgress() }
+            .subscribe({
+                view.hideProgress()
+                view.displayUsersList(it);
+            }, {
+                view.hideProgress()
+            })
+        )
     }
 
     /**

@@ -11,8 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.albums.AlbumActivity"></activity>
         <activity
-            android:name="com.example.album.ui.users.UsersListActivity"
+            android:name=".ui.users.UsersListActivity"
             android:label="@string/title_users"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

@@ -1,5 +1,6 @@
 package com.example.album.ui.users
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.JsonReader
 import android.util.Log
@@ -19,6 +20,7 @@ import com.example.album.datamodel.AlbumData
 import com.example.album.datamodel.UserData
 import com.example.album.network.ApiService
 import com.example.album.network.NetworkDataProvider
+import com.example.album.ui.albums.AlbumActivity
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_users.*
 import org.json.JSONArray
@@ -26,6 +28,7 @@ import java.util.ArrayList
 import kotlin.math.log
 
 class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.ViewInterface {
+
     @BindView(R.id.progress_circle)
     lateinit var progressView: ProgressBar
     @BindView(R.id.recycler_view)
@@ -97,7 +100,11 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
     }
 
     override fun onItemClick(userId: Int) {
-
+        val intent: Intent? = Intent(this, AlbumActivity::class.java);
+        if (intent != null) {
+            intent.putExtra("parUserId", userId)
+            startActivity(intent);
+        }
     }
 
 }
