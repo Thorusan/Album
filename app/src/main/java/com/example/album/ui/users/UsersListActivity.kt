@@ -49,7 +49,6 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
         ButterKnife.bind(this)
         setSupportActionBar(toolbar)
 
-
         val dataProvider = NetworkDataProvider(apiservice)
         val model = UsersModel(dataProvider)
 
