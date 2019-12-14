@@ -31,7 +31,7 @@ class UsersListPresenter(private val view: UsersListViewPresenterContract.ViewIn
         }
     }
 
-    fun onItemClick(album: AlbumData) {
-        view.onItemClick(album)
+    fun onItemClick(userId: Int) {
+        view.onItemClick(userId)
     }
 }

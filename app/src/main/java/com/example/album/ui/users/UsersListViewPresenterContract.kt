@@ -1,6 +1,5 @@
 package com.example.album.ui.users
 
-import com.example.album.datamodel.AlbumData
 import com.example.album.datamodel.UserData
 
 
@@ -9,7 +8,7 @@ interface UsersListViewPresenterContract {
         fun displayUsersList(usersList: List<UserData.User>)
         fun showProgress()
         fun hideProgress()
-        fun onItemClick(album: AlbumData)
+        fun onItemClick(userId: Int)
     }
 
     interface PresenterInterface {
