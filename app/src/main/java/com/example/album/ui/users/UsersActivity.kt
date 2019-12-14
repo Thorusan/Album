@@ -1,18 +1,41 @@
 package com.example.album.ui.users
 
 import android.os.Bundle
+import android.util.JsonReader
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import butterknife.ButterKnife
 import com.example.album.R
+import com.example.album.datamodel.AlbumData
+import com.example.album.datamodel.UserData
+import com.example.album.network.ApiService
+import com.example.album.network.NetworkDataProvider
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_users.*
+import org.json.JSONArray
+import kotlin.math.log
 
-class UsersActivity : AppCompatActivity() {
+class UsersActivity : AppCompatActivity(), UsersListViewPresenterContract.ViewInterface {
+    private lateinit var usersPresenter: UsersListPresenter
+    val apiservice by lazy {
+        ApiService.create()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_users)
         setSupportActionBar(toolbar)
+
+        ButterKnife.bind(this)
+
+
+        val dataProvider = NetworkDataProvider(apiservice)
+        val model = UsersModel(dataProvider)
+
+        usersPresenter = UsersListPresenter(this,  model)
+        usersPresenter.getUsersList()
 
     }
 
@@ -31,5 +54,21 @@ class UsersActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun displayUsersList(usersList: List<UserData.User>) {
+       Log.d("USERS", usersList.toString());
+    }
+
+    override fun showProgress() {
+
+    }
+
+    override fun hideProgress() {
+
+    }
+
+    override fun onItemClick(album: AlbumData) {
+
     }
 }

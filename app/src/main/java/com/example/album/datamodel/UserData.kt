@@ -9,17 +9,17 @@ class UserData() {
         @SerializedName("name")
         val name: String,
         @SerializedName("username")
-        val username: String,
+       val username: String,
         @SerializedName("email")
-        val email: String,
-        @SerializedName("address")
-        val address: Address,
-        @SerializedName("phone")
-        val phone: String,
-        @SerializedName("website")
-        val website: String,
-        @SerializedName("company")
-        val company: Company
+       val email: String,
+       @SerializedName("address")
+       val address: Address,
+       @SerializedName("phone")
+       val phone: String,
+       @SerializedName("website")
+       val website: String,
+       @SerializedName("company")
+       val company: Company
     )
 
     data class Address(
@@ -32,7 +32,7 @@ class UserData() {
         @SerializedName("zipcode")
         val zipcode: String,
         @SerializedName("geo")
-        val Geo: String
+        val geo: Geo
     )
 
     data class Geo(
@@ -47,7 +47,7 @@ class UserData() {
         val name: String,
         @SerializedName("catchPhrase")
         val catchPhrase: String,
-        @SerializedName("catchPhrase")
+        @SerializedName("bs")
         val bs: String
     )
 }
