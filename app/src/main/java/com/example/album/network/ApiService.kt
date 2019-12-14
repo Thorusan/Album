@@ -19,7 +19,7 @@ interface ApiService {
     @GET(BASE_URL + "/albums")
     fun getUserAlbums(@Query("userId") userId: Int): Observable<List<AlbumData>>
 
-    @GET(BASE_URL + "/photos/")
+    @GET(BASE_URL + "/photos")
     fun getAlbumPhotos(@Query("albumId") albumId: Int): Observable<List<PhotoData>>
 
 
