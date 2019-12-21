@@ -1,7 +1,7 @@
 package com.example.album.ui.albums
 
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
@@ -12,10 +12,10 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.album.R
 import com.example.album.datamodel.AlbumData
+import com.example.album.datamodel.PhotoData
 import com.example.album.network.ApiService
 import com.example.album.network.NetworkDataProvider
-import com.example.album.ui.users.UsersListAdapter
-import java.util.ArrayList
+import java.util.*
 
 class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewInterface {
     @BindView(R.id.progress_circle)
@@ -27,18 +27,25 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
 
     private lateinit var albumPresenter: AlbumListPresenter
 
+    private lateinit var albumList: List<AlbumData>
+    private lateinit var photosList: List<PhotoData>
+
     private var userId: Int = -1
 
     val apiservice by lazy {
         ApiService.create()
     }
 
+    @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_album)
 
         ButterKnife.bind(this)
+
         setSupportActionBar(toolbar)
+        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar()!!.setDisplayShowHomeEnabled(true);
 
         getUserIdFromBundle()
 
@@ -49,6 +56,12 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
         albumPresenter.getAlbumList(userId);
     }
 
+    @Override
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
 
     private fun getUserIdFromBundle() {
         val bundle: Bundle? = intent.extras
@@ -57,15 +70,28 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
         }
     }
 
-    override fun displayAlbumList(usersList: List<AlbumData>) {
+    override fun displayAlbumList(albumList: List<AlbumData>) {
+        this.albumList = albumList;
+
         val listAdapter = AlbumListAdapter(
-            ArrayList(usersList),
+            ArrayList(albumList),
             { item -> albumPresenter.onItemClick(item) }
         )
         recyclerView.setLayoutManager(LinearLayoutManager(this))
         recyclerView.setItemAnimator(DefaultItemAnimator())
         // Binds the Adapter to the RecyclerView
         recyclerView.setAdapter(listAdapter)
+
+        albumList.forEach {
+
+
+
+
+        }
+    }
+
+    override fun displayAlbumThumbnails(photosList: List<PhotoData>) {
+        Log.d("TAG", photosList.toString());
     }
 
     override fun showProgress() {

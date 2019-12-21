@@ -2,30 +2,22 @@ package com.example.album.ui.users
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.JsonReader
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
-import android.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.album.R
-import com.example.album.datamodel.AlbumData
 import com.example.album.datamodel.UserData
 import com.example.album.network.ApiService
 import com.example.album.network.NetworkDataProvider
 import com.example.album.ui.albums.AlbumActivity
-import com.google.gson.Gson
-import kotlinx.android.synthetic.main.activity_users.*
-import org.json.JSONArray
-import java.util.ArrayList
-import kotlin.math.log
+import java.util.*
 
 class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.ViewInterface {
 
@@ -42,6 +34,7 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
         ApiService.create()
     }
 
+    @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_users)
@@ -57,12 +50,14 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
 
     }
 
+    @Override
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_users, menu)
         return true
     }
 
+    @Override
     override fun onDestroy() {
         usersPresenter.onDestroy()
         super.onDestroy()
