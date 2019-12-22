@@ -94,9 +94,7 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
         photoThumbnails.put(albumId, photosList)
 
         val randomPhoto: PhotoData = photosList.shuffled().take(1)[0]
-
         albumList.find { it.id == albumId }!!.albumThumbnail = randomPhoto.thumbnailUrl
-
         albumsListAdapter.update(albumList)
 
         Log.d("TAG", photosList.toString());

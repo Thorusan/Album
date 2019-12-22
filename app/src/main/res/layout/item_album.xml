@@ -9,26 +9,22 @@
     app:cardCornerRadius="10dp"
     app:cardElevation="0dp">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:padding="8dp">
 
         <TextView
             android:id="@+id/text_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="20sp" />
+            android:layout_weight="0.7"
+            android:textSize="20sp"/>
 
         <ImageView
             android:id="@+id/img_thumbnail"
             android:layout_width="@dimen/thumbnail_width"
-            android:layout_height="@dimen/thumbnail_height"
-            android:layout_toRightOf="@+id/text_name"
-          />
-
-
-    </RelativeLayout>
-
-
+            android:layout_height="@dimen/thumbnail_height"/>
+    </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

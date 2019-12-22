@@ -36,8 +36,6 @@ class AlbumListAdapter(private var context: Context, private var albumList: List
         notifyDataSetChanged()
     }
 
-
-
     class AlbumViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         @BindView(R.id.text_name)
