@@ -17,7 +17,23 @@ class AlbumListPresenter(
     private lateinit var photosList: List<PhotoData>*/
 
     override fun getAlbumList(userId: Int) {
-       compositeDisposable.add(model.getAlbumsFromProvider(userId)
+        compositeDisposable.add(model.getAlbumsFromProvider(userId)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { view.showProgress() }
+            .subscribe({
+                view.hideProgress()
+                view.displayAlbumList(it);
+
+                for (albumData in it) {
+                    getPhotoList(albumData.id)
+                }
+            }, {
+                view.hideProgress()
+            })
+        )
+
+
+       /*compositeDisposable.add(model.getAlbumsFromProvider(userId)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { view.showProgress() }
             .subscribe({
@@ -26,7 +42,7 @@ class AlbumListPresenter(
             }, {
                 view.hideProgress()
             })
-        )
+        )*/
     }
 
     override fun getPhotoList(albumId: Int) {
@@ -35,7 +51,7 @@ class AlbumListPresenter(
             .doOnSubscribe { view.showProgress() }
             .subscribe({
                 view.hideProgress()
-                view.displayAlbumThumbnails(it);
+                view.displayAlbumThumbnails(albumId, it);
             }, {
                 view.hideProgress()
             })

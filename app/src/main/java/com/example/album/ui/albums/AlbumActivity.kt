@@ -1,6 +1,7 @@
 package com.example.album.ui.albums
 
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
@@ -17,6 +18,7 @@ import com.example.album.network.ApiService
 import com.example.album.network.NetworkDataProvider
 import java.util.*
 
+
 class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewInterface {
     @BindView(R.id.progress_circle)
     lateinit var progressView: ProgressBar
@@ -29,6 +31,9 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
 
     private lateinit var albumList: List<AlbumData>
     private lateinit var photosList: List<PhotoData>
+    private lateinit var albumsListAdapter: AlbumListAdapter
+
+    private val photoThumbnails: HashMap<Int, List<PhotoData>> = HashMap()
 
     private var userId: Int = -1
 
@@ -73,24 +78,27 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
     override fun displayAlbumList(albumList: List<AlbumData>) {
         this.albumList = albumList;
 
-        val listAdapter = AlbumListAdapter(
+
+        albumsListAdapter = AlbumListAdapter(this,
             ArrayList(albumList),
             { item -> albumPresenter.onItemClick(item) }
         )
         recyclerView.setLayoutManager(LinearLayoutManager(this))
         recyclerView.setItemAnimator(DefaultItemAnimator())
         // Binds the Adapter to the RecyclerView
-        recyclerView.setAdapter(listAdapter)
+        recyclerView.setAdapter(albumsListAdapter)
 
-        albumList.forEach {
-
-
-
-
-        }
     }
 
-    override fun displayAlbumThumbnails(photosList: List<PhotoData>) {
+    override fun displayAlbumThumbnails(albumId: Int, photosList: List<PhotoData>) {
+        photoThumbnails.put(albumId, photosList)
+
+        val randomPhoto: PhotoData = photosList.shuffled().take(1)[0]
+
+        albumList.find { it.id == albumId }!!.albumThumbnail = randomPhoto.thumbnailUrl
+
+        albumsListAdapter.update(albumList)
+
         Log.d("TAG", photosList.toString());
     }
 
