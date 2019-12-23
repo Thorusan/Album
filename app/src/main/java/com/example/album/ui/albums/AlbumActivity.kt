@@ -1,5 +1,6 @@
 package com.example.album.ui.albums
 
+import android.content.Intent
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
@@ -16,7 +17,9 @@ import com.example.album.datamodel.AlbumData
 import com.example.album.datamodel.PhotoData
 import com.example.album.network.ApiService
 import com.example.album.network.NetworkDataProvider
+import com.example.album.ui.photos.PhotosActivity
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewInterface {
@@ -33,7 +36,7 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
     private lateinit var photosList: List<PhotoData>
     private lateinit var albumsListAdapter: AlbumListAdapter
 
-    private val photoThumbnails: HashMap<Int, List<PhotoData>> = HashMap()
+    private val photoThumbnails: HashMap<Int, ArrayList<PhotoData>> = HashMap()
 
     private var userId: Int = -1
 
@@ -91,7 +94,7 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
     }
 
     override fun displayAlbumThumbnails(albumId: Int, photosList: List<PhotoData>) {
-        photoThumbnails.put(albumId, photosList)
+        photoThumbnails.put(albumId, ArrayList(photosList))
 
         val randomPhoto: PhotoData = photosList.shuffled().take(1)[0]
         albumList.find { it.id == albumId }!!.albumThumbnail = randomPhoto.thumbnailUrl
@@ -109,11 +112,10 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
     }
 
     override fun onItemClick(albumId: Int) {
-        // TODO
-        /*val intent: Intent? = Intent(this, AlbumActivity::class.java);
+        val intent: Intent? = Intent(this, PhotosActivity::class.java);
         if (intent != null) {
-            intent.putExtra("parUserId", userId)
+            intent.putParcelableArrayListExtra("parPhotosList", photoThumbnails.get(albumId))
             startActivity(intent);
-        }*/
+        }
     }
 }
