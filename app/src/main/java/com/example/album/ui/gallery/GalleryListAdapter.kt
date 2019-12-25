@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -38,6 +39,8 @@ class GalleryListAdapter(
     class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         @BindView(R.id.img_photo)
         lateinit var imgPhoto: ImageView
+        @BindView(R.id.text_title)
+        lateinit var textTitle: TextView
 
         init {
             ButterKnife.bind(this, itemView)
@@ -45,11 +48,13 @@ class GalleryListAdapter(
 
         fun bind(photo: PhotoData, listener: (Int) -> Unit) = with(itemView) {
 
-            /*  textName.text = album.title */
+
 
               GlideApp.with(this)
                   .load(photo.thumbnailUrl)
                   .into(imgPhoto)
+
+            textTitle.text = photo.title
 
             itemView.setOnClickListener { listener(photo.id) }
         }
