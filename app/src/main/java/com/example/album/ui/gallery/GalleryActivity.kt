@@ -1,5 +1,6 @@
 package com.example.album.ui.gallery
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -12,6 +13,7 @@ import butterknife.ButterKnife
 import com.example.album.R
 import com.example.album.common.Constants.Companion.MIN_COLS_GALLERY
 import com.example.album.datamodel.PhotoData
+import com.example.album.ui.photo.PhotoActivity
 import com.example.album.utils.Utility
 
 class GalleryActivity : AppCompatActivity() {
@@ -25,7 +27,7 @@ class GalleryActivity : AppCompatActivity() {
 
     private lateinit var galleryListAdapter: GalleryListAdapter
     private lateinit var photostList: ArrayList<PhotoData>
-    private val minFloatWidth = 130F
+    private val minFloatWidth = 120F
 
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,8 +37,8 @@ class GalleryActivity : AppCompatActivity() {
         ButterKnife.bind(this)
 
         setSupportActionBar(toolbar)
-        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar()!!.setDisplayShowHomeEnabled(true);
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayShowHomeEnabled(true);
 
         getPhotos();
         displayGallery();
@@ -82,6 +84,10 @@ class GalleryActivity : AppCompatActivity() {
     }
 
     private fun onItemClick(item: Int) {
-
+        val intent: Intent? = Intent(this, PhotoActivity::class.java);
+        if (intent != null) {
+            //intent.putParcelableArrayListExtra("parPhotosList", photoThumbnails.get(albumId))
+            startActivity(intent);
+        }
     }
 }

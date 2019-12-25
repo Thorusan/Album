@@ -94,4 +94,8 @@
     <string name="username_label">Username:</string>
     <string name="title_albums">Albums</string>
     <string name="title_gallery">Gallery</string>
+
+    <string name="title_activity_photo">PhotoActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

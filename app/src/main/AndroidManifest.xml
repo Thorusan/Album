@@ -13,7 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
+        <activity
+            android:name=".ui.photo.PhotoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_photo"
+            android:theme="@style/FullscreenTheme"></activity>
         <activity
             android:name=".ui.users.UsersListActivity"
             android:label="@string/title_users"
@@ -26,14 +30,12 @@
         </activity>
         <activity
             android:name=".ui.albums.AlbumActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="@string/title_albums"/>
-
-        <activity android:name=".ui.gallery.GalleryActivity"
-            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/title_albums"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.gallery.GalleryActivity"
             android:label="@string/title_gallery"
-            />
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
-
 
 </manifest>
