@@ -7,7 +7,7 @@ import com.example.album.datamodel.UserData
 
 interface AlbumListViewPresenterContract {
     interface ViewInterface {
-        fun displayAlbumList(usersList: List<AlbumData>)
+        fun displayAlbumList(albumList: List<AlbumData>)
         fun displayAlbumThumbnails(albumId: Int, photosList: List<PhotoData>)
         fun showProgress()
         fun hideProgress()
