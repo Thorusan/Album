@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.album.R
+import com.example.album.base.App
 import com.example.album.datamodel.UserData
 import com.example.album.network.ApiService
 import com.example.album.network.NetworkDataProvider
@@ -30,9 +31,6 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
 
     private lateinit var usersPresenter: UsersListPresenter
 
-    val apiservice by lazy {
-        ApiService.create()
-    }
 
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +40,7 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
         ButterKnife.bind(this)
         setSupportActionBar(toolbar)
 
-        val dataProvider = NetworkDataProvider(apiservice)
+        val dataProvider = NetworkDataProvider(App.apiService!!)
         val model = UsersModel(dataProvider)
 
         usersPresenter = UsersListPresenter(this,  model)

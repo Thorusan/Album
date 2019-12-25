@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.album.R
+import com.example.album.base.App
 import com.example.album.datamodel.AlbumData
 import com.example.album.datamodel.PhotoData
 import com.example.album.network.ApiService
@@ -39,9 +40,6 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
 
     private var userId: Int = -1
 
-    val apiservice by lazy {
-        ApiService.create()
-    }
 
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,12 +49,12 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
         ButterKnife.bind(this)
 
         setSupportActionBar(toolbar)
-        getSupportActionBar()!!.setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar()!!.setDisplayShowHomeEnabled(true);
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayShowHomeEnabled(true);
 
         getUserIdFromBundle()
 
-        val dataProvider = NetworkDataProvider(apiservice)
+        val dataProvider = NetworkDataProvider(App.apiService!!)
         val model = AlbumModel(dataProvider)
 
         albumPresenter = AlbumListPresenter(this, model)
