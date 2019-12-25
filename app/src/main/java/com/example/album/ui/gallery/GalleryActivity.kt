@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.album.R
+import com.example.album.common.Constants.Companion.MIN_COLS_GALLERY
 import com.example.album.datamodel.PhotoData
+import com.example.album.utils.Utility
 
 class GalleryActivity : AppCompatActivity() {
 
@@ -23,6 +25,7 @@ class GalleryActivity : AppCompatActivity() {
 
     private lateinit var galleryListAdapter: GalleryListAdapter
     private lateinit var photostList: ArrayList<PhotoData>
+    private val minFloatWidth = 130F
 
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +61,11 @@ class GalleryActivity : AppCompatActivity() {
             ArrayList(this.photostList),
             { item -> onItemClick(item) }
         )
-        recyclerView.setLayoutManager(GridLayoutManager(getApplicationContext(), 2))
+
+        var numCols: Int = Utility.calculateNoOfColumns(this, minFloatWidth)
+        if (numCols < 2) numCols = MIN_COLS_GALLERY
+
+        recyclerView.setLayoutManager(GridLayoutManager(getApplicationContext(),numCols))
         recyclerView.setItemAnimator(DefaultItemAnimator())
         // Binds the Adapter to the RecyclerView
         recyclerView.setAdapter(galleryListAdapter)
