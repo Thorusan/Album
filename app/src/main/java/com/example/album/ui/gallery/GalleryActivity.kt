@@ -83,10 +83,10 @@ class GalleryActivity : AppCompatActivity() {
         progressView.visibility = View.GONE
     }
 
-    private fun onItemClick(item: Int) {
+    private fun onItemClick(item: PhotoData) {
         val intent: Intent? = Intent(this, PhotoActivity::class.java);
         if (intent != null) {
-            //intent.putParcelableArrayListExtra("parPhotosList", photoThumbnails.get(albumId))
+            intent.putExtra("parPhoto", item)
             startActivity(intent);
         }
     }

@@ -4,7 +4,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import butterknife.BindView
+import butterknife.ButterKnife
 import com.example.album.R
+import com.example.album.common.GlideApp
+import com.example.album.datamodel.PhotoData
 import kotlinx.android.synthetic.main.activity_photo.*
 
 /**
@@ -12,10 +19,16 @@ import kotlinx.android.synthetic.main.activity_photo.*
  * status bar and navigation/system bar) with user interaction.
  */
 class PhotoActivity : AppCompatActivity() {
+    @BindView(R.id.img_photo_details)
+    lateinit var imgPhotoDetails: ImageView
+    @BindView(R.id.fullscreen_content_controls)
+    lateinit var fullScreenContentControls: LinearLayout
+
+    private lateinit var photoDetails: PhotoData
     private val mHideHandler = Handler()
     private val mHidePart2Runnable = Runnable {
         // Delayed removal of status and navigation bar
-        fullscreen_content.systemUiVisibility =
+        imgPhotoDetails.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LOW_PROFILE or
                     View.SYSTEM_UI_FLAG_FULLSCREEN or
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
@@ -43,18 +56,40 @@ class PhotoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_photo)
+
+        ButterKnife.bind(this)
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         mVisible = true
 
         registerListeners()
+
+        getPhotoDetails()
+        loadPhotoDetails()
+
+
+    }
+
+    private fun getPhotoDetails() {
+        val bundle: Bundle? = intent.extras
+        if (bundle != null) {
+            photoDetails = bundle.getParcelable("parPhoto");
+
+
+        }
+    }
+
+    private fun loadPhotoDetails() {
+        GlideApp.with(this)
+            .load(photoDetails.url)
+            .into(imgPhotoDetails)
     }
 
     private fun registerListeners() {
         // Set up the user interaction to manually show or hide the system UI.
-        fullscreen_content.setOnClickListener { toggle() }
+        imgPhotoDetails.setOnClickListener { toggle() }
 
         dummy_button.setOnTouchListener(mDelayHideTouchListener)
     }
@@ -89,7 +124,7 @@ class PhotoActivity : AppCompatActivity() {
 
     private fun show() {
         // Show the system bar
-        fullscreen_content.systemUiVisibility =
+        imgPhotoDetails.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
                     View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
         mVisible = true

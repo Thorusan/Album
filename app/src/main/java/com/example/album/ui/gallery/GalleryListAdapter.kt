@@ -18,7 +18,7 @@ import com.example.album.datamodel.PhotoData
 class GalleryListAdapter(
     private var context: Context,
     private var photosList: List<PhotoData>,
-    private val listener: (Int) -> Unit
+    private val listener: (PhotoData) -> Unit
 ) :
     RecyclerView.Adapter<GalleryListAdapter.PhotoViewHolder>() {
 
@@ -46,17 +46,14 @@ class GalleryListAdapter(
             ButterKnife.bind(this, itemView)
         }
 
-        fun bind(photo: PhotoData, listener: (Int) -> Unit) = with(itemView) {
-
-
-
-              GlideApp.with(this)
-                  .load(photo.thumbnailUrl)
-                  .into(imgPhoto)
+        fun bind(photo: PhotoData, listener: (PhotoData) -> Unit) = with(itemView) {
+            GlideApp.with(this)
+                .load(photo.thumbnailUrl)
+                .into(imgPhoto)
 
             textTitle.text = photo.title
 
-            itemView.setOnClickListener { listener(photo.id) }
+            itemView.setOnClickListener { listener(photo) }
         }
     }
 }
