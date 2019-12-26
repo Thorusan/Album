@@ -55,8 +55,8 @@ class PhotoActivity : AppCompatActivity() {
         supportActionBar?.show()
         fullscreen_content_controls.visibility = View.VISIBLE
     }
-    private var mVisible: Boolean = false
-    private val mHideRunnable = Runnable { hide() }
+    private var mVisible: Boolean = true
+    private val mHideRunnable = Runnable { show() }
 
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the

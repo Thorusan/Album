@@ -14,11 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity
-            android:name=".ui.photo.PhotoActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_photo"
-            android:theme="@style/FullscreenTheme" />
+
         <activity
             android:name=".ui.users.UsersListActivity"
             android:label="@string/title_users"
@@ -37,6 +33,11 @@
             android:name=".ui.gallery.GalleryActivity"
             android:label="@string/title_gallery"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.photo.PhotoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_photo"
+            android:theme="@style/FullscreenTheme" />
     </application>
 
 </manifest>

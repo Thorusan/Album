@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
+    android:background="@color/main_background"
     tools:context=".ui.photo.PhotoActivity">
 
 
@@ -40,7 +40,8 @@
                     style="@style/TextPhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/photo" />
+                    android:text="@string/photo"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/text_photo_title"
@@ -60,7 +61,8 @@
                     style="@style/TextPhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/album" />
+                    android:text="@string/album"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/text_album_title"
@@ -80,7 +82,8 @@
                     style="@style/TextPhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/created_by" />
+                    android:text="@string/created_by"
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/text_user"
