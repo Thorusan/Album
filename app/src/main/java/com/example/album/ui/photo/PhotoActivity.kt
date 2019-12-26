@@ -58,16 +58,6 @@ class PhotoActivity : AppCompatActivity() {
     private var mVisible: Boolean = true
     private val mHideRunnable = Runnable { show() }
 
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI.
-     */
-    private val mDelayHideTouchListener = View.OnTouchListener { _, _ ->
-        if (AUTO_HIDE) {
-            delayedHide(AUTO_HIDE_DELAY_MILLIS)
-        }
-        false
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
