@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +14,9 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.album.R
 import com.example.album.base.App
+import com.example.album.base.AppPreferences
 import com.example.album.datamodel.AlbumData
+import com.example.album.datamodel.ListsData
 import com.example.album.datamodel.PhotoData
 import com.example.album.network.ApiService
 import com.example.album.network.NetworkDataProvider
@@ -29,11 +32,10 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
     lateinit var recyclerView: RecyclerView
     @BindView(R.id.toolbar)
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    @BindView(R.id.text_title_nav)
+    lateinit var textTitle: TextView
 
     private lateinit var albumPresenter: AlbumListPresenter
-
-    private lateinit var albumList: List<AlbumData>
-    private lateinit var photosList: List<PhotoData>
     private lateinit var albumsListAdapter: AlbumListAdapter
 
     private val photoThumbnails: HashMap<Int, ArrayList<PhotoData>> = HashMap()
@@ -53,6 +55,7 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
         supportActionBar?.setDisplayShowHomeEnabled(true);
 
         getUserIdFromBundle()
+        setTitle()
 
         val dataProvider = NetworkDataProvider(App.apiService!!)
         val model = AlbumModel(dataProvider)
@@ -61,12 +64,22 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
         albumPresenter.getAlbumList(userId);
     }
 
+    private fun setTitle() {
+        val user = ListsData.users.find { it.id == userId }!!
+        textTitle.text  = user.name
+    }
+
+    @Override
+    override fun onDestroy() {
+        albumPresenter.onDestroy()
+        super.onDestroy()
+    }
+
     @Override
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
-
 
     private fun getUserIdFromBundle() {
         val bundle: Bundle? = intent.extras
@@ -76,8 +89,7 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
     }
 
     override fun displayAlbumList(albumList: List<AlbumData>) {
-        this.albumList = albumList;
-
+        ListsData.albums = albumList;
 
         albumsListAdapter = AlbumListAdapter(this,
             ArrayList(albumList),
@@ -94,8 +106,8 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
         photoThumbnails.put(albumId, ArrayList(photosList))
 
         val randomPhoto: PhotoData = photosList.shuffled().take(1)[0]
-        albumList.find { it.id == albumId }!!.albumThumbnail = randomPhoto.thumbnailUrl
-        albumsListAdapter.update(albumList)
+        ListsData.albums.find { it.id == albumId }!!.albumThumbnail = randomPhoto.thumbnailUrl
+        albumsListAdapter.update(ListsData.albums)
 
         Log.d("TAG", photosList.toString());
     }
@@ -109,9 +121,12 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
     }
 
     override fun onItemClick(albumId: Int) {
+        AppPreferences.albumId = albumId
+
         val intent: Intent? = Intent(this, GalleryActivity::class.java);
         if (intent != null) {
             intent.putParcelableArrayListExtra("parPhotosList", photoThumbnails.get(albumId))
+            intent.putExtra("parAlbumId", albumId)
             startActivity(intent);
         }
     }

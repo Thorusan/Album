@@ -29,4 +29,10 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+    <style name="TextPhoto" parent="Widget.AppCompat.TextView">
+        <item name="android:background">#55000000</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">12sp</item>
+    </style>
 </resources>

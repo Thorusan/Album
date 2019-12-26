@@ -1,5 +1,6 @@
 package com.example.album.ui.photo
 
+import android.app.ApplicationErrorReport
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -10,8 +11,12 @@ import android.widget.TextView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.album.R
+import com.example.album.base.AppPreferences
 import com.example.album.common.GlideApp
+import com.example.album.datamodel.AlbumData
+import com.example.album.datamodel.ListsData
 import com.example.album.datamodel.PhotoData
+import com.example.album.datamodel.UserData
 import kotlinx.android.synthetic.main.activity_photo.*
 
 /**
@@ -24,7 +29,17 @@ class PhotoActivity : AppCompatActivity() {
     @BindView(R.id.fullscreen_content_controls)
     lateinit var fullScreenContentControls: LinearLayout
 
+    @BindView(R.id.text_photo_title)
+    lateinit var textPhotoTitle: TextView
+    @BindView(R.id.text_album_title)
+    lateinit var textAlbumTitle: TextView
+    @BindView(R.id.text_user)
+    lateinit var textUser: TextView
+
     private lateinit var photoDetails: PhotoData
+    private lateinit var album: AlbumData
+    private lateinit var user: UserData.User
+
     private val mHideHandler = Handler()
     private val mHidePart2Runnable = Runnable {
         // Delayed removal of status and navigation bar
@@ -60,7 +75,8 @@ class PhotoActivity : AppCompatActivity() {
 
         ButterKnife.bind(this)
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayShowHomeEnabled(true);
 
         mVisible = true
 
@@ -68,20 +84,36 @@ class PhotoActivity : AppCompatActivity() {
 
         getPhotoDetails()
         loadPhotoDetails()
+    }
 
-
+    @Override
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun getPhotoDetails() {
+        getPhotoFromBundle()
+
+        val userId = AppPreferences.userId
+        val albumId = AppPreferences.albumId
+
+        album = ListsData.albums.find { it.id == albumId }!!
+        user = ListsData.users.find { it.id == userId }!!
+    }
+
+    private fun getPhotoFromBundle() {
         val bundle: Bundle? = intent.extras
         if (bundle != null) {
             photoDetails = bundle.getParcelable("parPhoto");
-
-
         }
     }
 
     private fun loadPhotoDetails() {
+        textPhotoTitle.text = photoDetails.title
+        textAlbumTitle.text = album.title
+        textUser.text = user.name
+
         GlideApp.with(this)
             .load(photoDetails.url)
             .into(imgPhotoDetails)
@@ -90,8 +122,6 @@ class PhotoActivity : AppCompatActivity() {
     private fun registerListeners() {
         // Set up the user interaction to manually show or hide the system UI.
         imgPhotoDetails.setOnClickListener { toggle() }
-
-        dummy_button.setOnTouchListener(mDelayHideTouchListener)
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

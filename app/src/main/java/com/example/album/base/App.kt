@@ -12,7 +12,9 @@ class App : Application() {
         var apiService: ApiService? = apiservice
     }
 
+    @Override
     override fun onCreate() {
         super.onCreate()
+        AppPreferences.init(this)
     }
 }

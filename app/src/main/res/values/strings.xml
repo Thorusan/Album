@@ -100,4 +100,9 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="created_by">Created by:</string>
+    <string name="album">Album:</string>
+    <string name="photo">Photo:</string>
+    <string name="album_nav_label">Album:</string>
+    <string name="user_label">User:</string>
 </resources>

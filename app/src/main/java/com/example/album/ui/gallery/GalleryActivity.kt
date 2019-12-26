@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,11 +13,13 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.album.R
 import com.example.album.common.Constants.Companion.MIN_COLS_GALLERY
+import com.example.album.datamodel.ListsData
 import com.example.album.datamodel.PhotoData
 import com.example.album.ui.photo.PhotoActivity
 import com.example.album.utils.Utility
 
 class GalleryActivity : AppCompatActivity() {
+
 
     @BindView(R.id.progress_circle)
     lateinit var progressView: ProgressBar
@@ -24,10 +27,13 @@ class GalleryActivity : AppCompatActivity() {
     lateinit var recyclerView: RecyclerView
     @BindView(R.id.toolbar)
     lateinit var toolbar: androidx.appcompat.widget.Toolbar
+    @BindView(R.id.text_title_nav)
+    lateinit var textTitle: TextView
+
 
     private lateinit var galleryListAdapter: GalleryListAdapter
-    private lateinit var photostList: ArrayList<PhotoData>
     private val minFloatWidth = 120F
+    private var albumId: Int = -1
 
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +47,13 @@ class GalleryActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true);
 
         getPhotos();
+        setTitle()
         displayGallery();
+    }
+
+    private fun setTitle() {
+        val album = ListsData.albums.find { it.id == albumId }!!
+        textTitle.text  = album.title
     }
 
     @Override
@@ -54,13 +66,14 @@ class GalleryActivity : AppCompatActivity() {
         showProgress()
         val bundle: Bundle? = intent.extras
         if (bundle != null) {
-            photostList = bundle.getParcelableArrayList("parPhotosList");
+            ListsData.photos = bundle.getParcelableArrayList("parPhotosList");
+            albumId = bundle.getInt("parAlbumId")
         }
     }
 
     fun displayGallery() {
        galleryListAdapter = GalleryListAdapter(this,
-            ArrayList(this.photostList),
+            ArrayList(ListsData.photos),
             { item -> onItemClick(item) }
         )
 

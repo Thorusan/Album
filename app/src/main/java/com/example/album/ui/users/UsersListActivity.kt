@@ -14,6 +14,8 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.album.R
 import com.example.album.base.App
+import com.example.album.base.AppPreferences
+import com.example.album.datamodel.ListsData
 import com.example.album.datamodel.UserData
 import com.example.album.network.ApiService
 import com.example.album.network.NetworkDataProvider
@@ -73,6 +75,8 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
     }
 
     override fun displayUsersList(usersList: List<UserData.User>) {
+        ListsData.users = usersList
+
         val listAdapter = UsersListAdapter(
             ArrayList(usersList),
             { item -> usersPresenter.onItemClick(item) }
@@ -92,6 +96,8 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
     }
 
     override fun onItemClick(userId: Int) {
+        AppPreferences.userId = userId
+
         val intent: Intent? = Intent(this, AlbumActivity::class.java);
         if (intent != null) {
             intent.putExtra("parUserId", userId)
