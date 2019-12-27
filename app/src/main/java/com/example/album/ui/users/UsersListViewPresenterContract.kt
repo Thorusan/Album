@@ -8,6 +8,7 @@ interface UsersListViewPresenterContract {
         fun displayUsersList(usersList: List<UserData.User>)
         fun showProgress()
         fun hideProgress()
+        fun displayErrorMessage()
         fun onItemClick(userId: Int)
     }
 

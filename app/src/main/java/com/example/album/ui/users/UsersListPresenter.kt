@@ -19,6 +19,7 @@ class UsersListPresenter(
                 view.displayUsersList(it);
             }, {
                 view.hideProgress()
+                view.displayErrorMessage()
             })
         )
     }

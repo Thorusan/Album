@@ -1,11 +1,13 @@
 package com.example.album.ui.users
 
+import android.R.attr.data
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,10 +19,10 @@ import com.example.album.base.App
 import com.example.album.base.AppPreferences
 import com.example.album.datamodel.ListsData
 import com.example.album.datamodel.UserData
-import com.example.album.network.ApiService
 import com.example.album.network.NetworkDataProvider
 import com.example.album.ui.albums.AlbumActivity
 import java.util.*
+
 
 class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.ViewInterface {
 
@@ -93,6 +95,12 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
 
     override fun hideProgress() {
         progressView.visibility = View.GONE
+    }
+
+    override fun displayErrorMessage() {
+        Toast.makeText(this, getString(R.string.error),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     override fun onItemClick(userId: Int) {
