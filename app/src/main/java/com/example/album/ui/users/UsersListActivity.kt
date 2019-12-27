@@ -21,6 +21,8 @@ import com.example.album.datamodel.ListsData
 import com.example.album.datamodel.UserData
 import com.example.album.network.NetworkDataProvider
 import com.example.album.ui.albums.AlbumActivity
+import com.example.album.ui.error.ErrorActivity
+import com.example.album.utils.Utility
 import java.util.*
 
 
@@ -48,8 +50,13 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
         val model = UsersModel(dataProvider)
 
         usersPresenter = UsersListPresenter(this,  model)
-        usersPresenter.getUsersList()
 
+        if (Utility.isNetworkConnected(this)) {
+            usersPresenter.getUsersList()
+        } else {
+            val intent: Intent? = Intent(this, ErrorActivity::class.java);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -57,6 +64,20 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_users, menu)
         return true
+    }
+
+    @Override
+    override fun onResume() {
+        if (!Utility.isNetworkConnected(this))  {
+            val intent: Intent? = Intent(this, ErrorActivity::class.java);
+            startActivity(intent);
+        } else {
+            if (ListsData.users.size == 0) {
+                usersPresenter.getUsersList()
+            }
+
+        }
+        super.onResume()
     }
 
     @Override

@@ -20,7 +20,9 @@ import com.example.album.datamodel.ListsData
 import com.example.album.datamodel.PhotoData
 import com.example.album.network.ApiService
 import com.example.album.network.NetworkDataProvider
+import com.example.album.ui.error.ErrorActivity
 import com.example.album.ui.gallery.GalleryActivity
+import com.example.album.utils.Utility
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -61,7 +63,26 @@ class AlbumActivity : AppCompatActivity(), AlbumListViewPresenterContract.ViewIn
         val model = AlbumModel(dataProvider)
 
         albumPresenter = AlbumListPresenter(this, model)
-        albumPresenter.getAlbumList(userId);
+
+        if (Utility.isNetworkConnected(this)) {
+            albumPresenter.getAlbumList(userId);
+        } else {
+            val intent: Intent? = Intent(this, ErrorActivity::class.java);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    override fun onResume() {
+        if (!Utility.isNetworkConnected(this))  {
+            val intent: Intent? = Intent(this, ErrorActivity::class.java);
+            startActivity(intent);
+        } else {
+            if (ListsData.albums.size == 0) {
+                albumPresenter.getAlbumList(userId);
+            }
+        }
+        super.onResume()
     }
 
     private fun setTitle() {
