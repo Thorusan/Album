@@ -9,17 +9,17 @@ class UserData() {
         @SerializedName("name")
         val name: String,
         @SerializedName("username")
-       val username: String,
+        val username: String,
         @SerializedName("email")
-       val email: String,
-       @SerializedName("address")
-       val address: Address,
-       @SerializedName("phone")
-       val phone: String,
-       @SerializedName("website")
-       val website: String,
-       @SerializedName("company")
-       val company: Company
+        val email: String,
+        @SerializedName("address")
+        val address: Address,
+        @SerializedName("phone")
+        val phone: String,
+        @SerializedName("website")
+        val website: String,
+        @SerializedName("company")
+        val company: Company
     )
 
     data class Address(
