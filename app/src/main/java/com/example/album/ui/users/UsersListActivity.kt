@@ -3,6 +3,7 @@ package com.example.album.ui.users
 import android.R.attr.data
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.example.album.R
@@ -19,11 +21,19 @@ import com.example.album.base.App
 import com.example.album.base.AppPreferences
 import com.example.album.datamodel.ListsData
 import com.example.album.datamodel.UserData
+import com.example.album.db.AppDatabase
+import com.example.album.db.UserEntity
 import com.example.album.network.NetworkDataProvider
 import com.example.album.ui.albums.AlbumActivity
 import com.example.album.ui.error.ErrorActivity
 import com.example.album.utils.Utility
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
+import java.io.Console
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.ViewInterface {
@@ -37,6 +47,11 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
 
     private lateinit var usersPresenter: UsersListPresenter
 
+    private lateinit var db: AppDatabase
+
+    private var listUsers = ArrayList<UserEntity>()
+    private val compositeDisposable = CompositeDisposable()
+
 
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,13 +61,30 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
         ButterKnife.bind(this)
         setSupportActionBar(toolbar)
 
+        db = AppDatabase(this)
+
+
         val dataProvider = NetworkDataProvider(App.apiService!!)
         val model = UsersModel(dataProvider)
 
         usersPresenter = UsersListPresenter(this,  model)
 
         if (Utility.isNetworkConnected(this)) {
-            usersPresenter.getUsersList()
+            // get users from database
+            compositeDisposable.add(db.userDao().getAllUsers()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    listUsers.clear()
+                    listUsers.addAll(it)
+                    displayUsersEntityList(listUsers)
+
+                    if (listUsers.isEmpty()) {
+                        usersPresenter.getUsersList()
+                    }
+                });
+
+
         } else {
             val intent: Intent? = Intent(this, ErrorActivity::class.java);
             startActivity(intent);
@@ -71,12 +103,8 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
         if (!Utility.isNetworkConnected(this))  {
             val intent: Intent? = Intent(this, ErrorActivity::class.java);
             startActivity(intent);
-        } else {
-            if (ListsData.users.size == 0) {
-                usersPresenter.getUsersList()
-            }
-
         }
+
         super.onResume()
     }
 
@@ -97,6 +125,19 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
         }
     }
 
+    fun displayUsersEntityList(usersList: List<UserEntity>) {
+        val listAdapter = UsersEntityListAdapter(
+            ArrayList(usersList),
+            { item -> usersPresenter.onItemClick(item) }
+        )
+
+
+        recyclerView.setLayoutManager(LinearLayoutManager(this))
+        recyclerView.setItemAnimator(DefaultItemAnimator())
+        // Binds the Adapter to the RecyclerView
+        recyclerView.setAdapter(listAdapter)
+    }
+
     override fun displayUsersList(usersList: List<UserData.User>) {
         ListsData.users = usersList
 
@@ -108,6 +149,19 @@ class UsersListActivity : AppCompatActivity(), UsersListViewPresenterContract.Vi
         recyclerView.setItemAnimator(DefaultItemAnimator())
         // Binds the Adapter to the RecyclerView
         recyclerView.setAdapter(listAdapter)
+
+
+        val entityUsers: ArrayList<UserEntity> = ArrayList()
+        usersList.forEach {
+            entityUsers.add(UserEntity(it.id, it.name, it.username, it.email, it.phone))
+        }
+
+        if (listUsers.isEmpty()) {
+            val thread = Thread {
+                db.userDao().insertAll(entityUsers);
+            }
+            thread.start()
+        }
     }
 
     override fun showProgress() {
